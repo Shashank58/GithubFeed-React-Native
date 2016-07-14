@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableHighlight, StyleSheet, Image , TextInput } from 'react-native'
+import { View, Text, TouchableHighlight, StyleSheet, Image , TextInput, 
+	ActivityIndicator, Alert } from 'react-native'
+
+var buffer = require('buffer')
 
 class LoginView extends Component {
 
@@ -8,7 +11,8 @@ class LoginView extends Component {
 		this.state = {
 			message: '',
 			userName : '',
-			password: ''
+			password: '',
+			isChecking: false
 		}
 	}
 
@@ -20,23 +24,65 @@ class LoginView extends Component {
 				<Text style={styles.title}>Github Feed</Text>	
 				<TextInput style={styles.textInput}
 					onChangeText={(text) => this.setState({userName: text})}
-					placeholder='Username' />	
+					placeholder='Github Username' />	
 				<TextInput style={styles.textInput}
 					onChangeText={(text) => this.setState({password: text})}
-					placeholder='Password' />
+					placeholder='Github Password' secureTextEntry={true} />
 				<TouchableHighlight style={styles.signIn} 
-					onPress={this.tryLoggingIn.bind(this)} >
+					onPress={this.validateAndLogin.bind(this)} >
 					<Text style={styles.signInText}>Sign In</Text>
 				</TouchableHighlight>
-				<Text style={styles.errorMsg}>{this.state.message}</Text>			
+				<Text style={styles.errorMsg}>{this.state.message}</Text>
+				<View style={styles.container}>
+					<ActivityIndicator
+						animating={this.state.isChecking}
+						size='large' />
+				</View>			
 			</View>
 		)
 	}
 
-	tryLoggingIn() {
+	validateAndLogin() {
+		if (this.setState.isChecking) {
+			return
+		}
+
 		if (this.state.userName === '' || this.state.password === '') {
 			return this.setState({message: 'Username or password cannot be empty'})
 		}
+		this.authenticate()
+	}
+
+	authenticate() {
+		this.setState({isChecking: true})
+		var b = buffer.Buffer(this.state.userName + ':' + 
+				this.state.password)
+		var encodedAuth = b.toString('base64');
+		fetch('https://api.github.com/user', {
+				headers: {
+					'Authorization' : 'Basic ' + encodedAuth
+				}
+			})
+			.then(response => {
+				if (response.status >= 200 && response.status <= 300) {
+					return response
+				}
+
+				if (response.status === 401) {
+					throw 'Bad credentials'
+				}
+
+				throw 'Unknown error'
+			})
+			.then(response => response.json())
+			.then(result => {
+				console.log(result)
+				this.setState({isChecking: false})
+			})
+			.catch(err => {
+				Alert.alert('Error!', err)
+			})
+			.finally(() => this.setState({isChecking: false}))
 	}
 }
 
@@ -44,7 +90,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: 'lightblue',
   },
   title: {
   	fontSize: 24,
