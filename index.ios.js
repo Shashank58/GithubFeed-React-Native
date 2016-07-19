@@ -8,7 +8,7 @@ import React, { Component } from 'react';
 import { AppRegistry, ActivityIndicator, View, Text, StyleSheet } from 'react-native';
 
 import LoginView from './shared/LoginView'
-import Feed from './Feed'
+import TabLayout from './TabLayout'
 
 const authenticate = require('./AuthService')
 

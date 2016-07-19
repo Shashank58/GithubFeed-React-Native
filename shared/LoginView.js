@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableHighlight, StyleSheet, Image , TextInput, 
 	ActivityIndicator, Alert } from 'react-native'
-import Feed from '../Feed'	
+import TabLayout from '../TabLayout'	
 
 var authenticate = require('../AuthService')	
 
@@ -49,7 +49,7 @@ class LoginView extends	Component {
 			)
 		} else {
 			console.log('Final one')
-			return (<Feed />)
+			return (<TabLayout />)
 		}	
 	}
 
