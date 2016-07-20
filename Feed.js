@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, Image, ListView, Text, ActivityIndicator, 
   TouchableHighlight } from 'react-native'
+import NavBar from './NavBar'  
 
 var moment = require('moment')
 
@@ -56,7 +57,8 @@ class Feed extends Component {
           break      
       } 
   		return(
-        <TouchableHighlight onPress={() => this._pressRow(feed)}>  
+        <TouchableHighlight underlayColor='#EEEEEE'
+          onPress={() => this._pressRow(feed)}>  
       		<View style={styles.container}>
             <Image source={{uri: feed.actor.avatar_url}} 
                       style={styles.avatarPic} />    
@@ -90,10 +92,7 @@ class Feed extends Component {
 
 		return(
         <View style={styles.mainContainer}>
-          <View style={styles.statusBar} />
-          <View style={styles.navBar}>
-            <Text style={styles.title}>Feed</Text>
-          </View>
+          <NavBar />
     			<ListView 
     				automaticallyAdjustContentInsets={true}
     				dataSource={this.state.dataSource}
@@ -115,20 +114,6 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
   },
-  statusBar: {
-    backgroundColor: '#EEEEEE',
-    height: 20
-  },
-  navBar: {
-    height: 45,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#EEEEEE'
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: '600'
-  },
   container: {
     flex: 1,
     flexDirection: 'row',
@@ -146,7 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 16
   },
   listView: {
-    marginBottom: 45
+    //marginBottom: 45
   },
   userInfo: {
     paddingLeft: 24,

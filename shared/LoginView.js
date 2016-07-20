@@ -19,7 +19,6 @@ class LoginView extends	Component {
 
 	componentDidMount() {
 		this.setState({user: this.props.user})
-		console.log('User after component mount', this.state.user)
 	}
 
 	render() {
@@ -34,7 +33,8 @@ class LoginView extends	Component {
 						placeholder='Github Username' />	
 					<TextInput style={styles.textInput}
 						onChangeText={(text) => this.setState({password: text})}
-						placeholder='Github Password' secureTextEntry={true} />
+						placeholder='Github Password' secureTextEntry={true}
+						returnKeyType='go' />
 					<TouchableHighlight style={styles.signIn} 
 						onPress={this.validateAndLogin.bind(this)} >
 						<Text style={styles.signInText}>Sign In</Text>
@@ -48,7 +48,6 @@ class LoginView extends	Component {
 				</View>
 			)
 		} else {
-			console.log('Final one')
 			return (<TabLayout />)
 		}	
 	}
@@ -67,16 +66,16 @@ class LoginView extends	Component {
 			userName: this.state.userName, 
 			password: this.state.password
 		}, (results) => {
-			console.log('Seriously?')
 			this.setState(results)
 		})
-		console.log('What the hell')
 	}
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
     alignItems: 'center',
     backgroundColor: 'lightblue',
   },
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
   	marginTop: 60
   },
   textInput: {
-  	height: 40,
+  	height: 50,
   	marginTop: 12,
   	marginLeft: 16,
   	marginRight: 16,
@@ -100,9 +99,10 @@ const styles = StyleSheet.create({
   	paddingRight: 6,
   	borderWidth: 1,
   	borderColor: 'gray',
+  	alignSelf: 'stretch'
   },
   signIn: {
-  	height: 40,
+  	height: 50,
   	backgroundColor: '#48bbec',
   	alignSelf: 'stretch',
   	marginTop: 20,

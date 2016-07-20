@@ -18,7 +18,7 @@ class TabLayout extends Component {
 				return <Feed {...globarNavigatorProps} />
 
 			case 'Detail':
-				return	<Detail {...globarNavigatorProps} 
+				return <Detail {...globarNavigatorProps} 
 					feed={route.feed} />	
 		}
 	}
