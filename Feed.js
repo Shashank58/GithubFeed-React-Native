@@ -1,41 +1,42 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Image, ListView, Text, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, Image, ListView, Text, ActivityIndicator, 
+  TouchableHighlight } from 'react-native'
 
 var moment = require('moment')
 
 class Feed extends Component {
 	constructor(props) {
-	    super(props); 
-	    this.state = {
+	   super(props); 
+	   this.state = {
 	      dataSource: new ListView.DataSource({
 	        rowHasChanged: (row1, row2) => row1 !== row2
 	      }),
 	      loaded: false,
-	    }
-  	}
+	   }
+  }
 
-  	componentDidMount() {
-  		this.fetchData()
-  	}
+	componentDidMount() {
+  	this.fetchData()
+	}
 
-  	fetchData() {
-  		require('./AuthService').getAuthInfo((err, authInfo) => {
-  			var url = 'https://api.github.com/users/'
+  fetchData() {
+  	require('./AuthService').getAuthInfo((err, authInfo) => {
+  		var url = 'https://api.github.com/users/'
   					+ authInfo.login + '/received_events'
-  			fetch(url, {
+  		fetch(url, {
   				headers: authInfo.header
-  			})		
-  			.then((response) => response.json())
-  			.then((responseData) => {
-  				this.setState({
-  					loaded: true,
-  					dataSource: this.state.dataSource.cloneWithRows(responseData)
-  				})
+  		})		
+  		.then((response) => response.json())
+  		.then((responseData) => {
+  			this.setState({
+  				loaded: true,
+  				dataSource: this.state.dataSource.cloneWithRows(responseData)
   			})
   		})
-  	}
+  	})
+  }
 
-  	renderFeed(feed) {
+  renderFeed(feed) {
       let event = ''
       switch(feed.type) {
         case 'PushEvent':
@@ -55,18 +56,27 @@ class Feed extends Component {
           break      
       } 
   		return(
-  			<View style={styles.container}>
-          <Image source={{uri: feed.actor.avatar_url}} 
-                  style={styles.avatarPic} />
-            <View style={styles.userInfo}>      
-              <Text style={styles.userName}>{feed.actor.display_login}
+        <TouchableHighlight onPress={() => this._pressRow(feed)}>  
+      		<View style={styles.container}>
+            <Image source={{uri: feed.actor.avatar_url}} 
+                      style={styles.avatarPic} />    
+              <View style={styles.userInfo}>      
+                <Text style={styles.userName}>{feed.actor.display_login}
                 <Text style={styles.event}>{event}</Text></Text>
-              <Text style={styles.repoName}>{feed.repo.name}</Text>
-              <Text style={styles.timeAgo}>{moment(feed.created_at).fromNow()}</Text>
-            </View>        
-        </View>
-  		)
-  	}
+                <Text style={styles.repoName}>{feed.repo.name}</Text>
+                <Text style={styles.timeAgo}>{moment(feed.created_at).fromNow()}</Text>
+              </View>        
+          </View>
+        </TouchableHighlight>
+		  )
+  }
+
+  _pressRow(feed) {
+    this.props.navigator.push({
+      id: 'Detail',
+      feed: feed
+    })
+  }
 
 	render() {
 		if (!this.state.loaded) {
@@ -79,12 +89,18 @@ class Feed extends Component {
 		}
 
 		return(
-			<ListView 
-				automaticallyAdjustContentInsets={true}
-				dataSource={this.state.dataSource}
-				renderRow={this.renderFeed}
-        renderSeparator={this.renderSeparator} 
-        style={styles.listView} />
+        <View style={styles.mainContainer}>
+          <View style={styles.statusBar} />
+          <View style={styles.navBar}>
+            <Text style={styles.title}>Feed</Text>
+          </View>
+    			<ListView 
+    				automaticallyAdjustContentInsets={true}
+    				dataSource={this.state.dataSource}
+    				renderRow={this.renderFeed.bind(this)}
+            renderSeparator={this.renderSeparator} 
+            style={styles.listView} />
+        </View>
 		)
 	}
 
@@ -96,6 +112,23 @@ class Feed extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+  },
+  statusBar: {
+    backgroundColor: '#EEEEEE',
+    height: 20
+  },
+  navBar: {
+    height: 45,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#EEEEEE'
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600'
+  },
   container: {
     flex: 1,
     flexDirection: 'row',
@@ -113,7 +146,6 @@ const styles = StyleSheet.create({
     borderRadius: 16
   },
   listView: {
-    marginTop: 12,
     marginBottom: 45
   },
   userInfo: {

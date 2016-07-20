@@ -1,12 +1,25 @@
 import React, { Component } from 'react'
-import { View, Text, TabBarIOS, StyleSheet, Image } from 'react-native'
+import { View, Text, TabBarIOS, StyleSheet, Image, Navigator } from 'react-native'
 import Feed from './Feed'
+import Detail from './Detail'
 
 class TabLayout extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
 			selectedTab: 'Feed'
+		}
+	}
+
+	_renderScene(route, navigator) {
+		let globarNavigatorProps = { navigator }
+		switch(route.id) {
+			case 'Feed':
+				return <Feed {...globarNavigatorProps} />
+
+			case 'Detail':
+				return	<Detail {...globarNavigatorProps} 
+					feed={route.feed} />	
 		}
 	}
 
@@ -20,7 +33,10 @@ class TabLayout extends Component {
 					onPress={() => {
 						this.setState({selectedTab: 'Feed'})
 					}}>
-					<Feed />
+					<Navigator
+						initialRoute={{id: 'Feed'}}
+						renderScene={this._renderScene} />
+
 				</TabBarIOS.Item>
 				<TabBarIOS.Item
 					selected={this.state.selectedTab === 'Search'}
