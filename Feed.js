@@ -98,10 +98,14 @@ class Feed extends Component {
     				dataSource={this.state.dataSource}
     				renderRow={this.renderFeed.bind(this)}
             renderSeparator={this.renderSeparator} 
-            style={styles.listView} />
+            style={{marginBottom : this.getMargin()}} />
         </View>
 		)
 	}
+
+  getMargin(){
+    return this.props.margin
+  }
 
   renderSeparator(sectionID, rowID) {
     return (
@@ -129,9 +133,6 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 16
-  },
-  listView: {
-    //marginBottom: 45
   },
   userInfo: {
     paddingLeft: 24,

@@ -11,7 +11,7 @@ class TabLayout extends Component {
 		let globarNavigatorProps = { navigator }
 		switch(route.id) {
 			case 'Feed':
-				return <Feed {...globarNavigatorProps} />
+				return <Feed {...globarNavigatorProps} margin={0}/>
 
 			case 'Detail':
 				return <Detail {...globarNavigatorProps} 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 
 class NavBar extends Component {
 	render() {
@@ -16,7 +16,7 @@ class NavBar extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1
+		height: 65
 	},
 	statusBar: {
 	    backgroundColor: '#EEEEEE',
